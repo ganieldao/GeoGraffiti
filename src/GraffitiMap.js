@@ -9,6 +9,8 @@ var currentColor = '#000'; // default black
 
 var resolutionScale = window.devicePixelRatio || 1;
 
+var gridSize = 0.2;
+
 function init() {
     // initialize the map
     var mapOptions = {
@@ -60,12 +62,12 @@ function click (e) {
     // if the (x, y) coordinates are (8, 8), then we want to color
     // in the square starting from (1, 1) through (9, 9) while leaving
     // the border the existing grid colors of grey and red.
-    startX = Math.floor(x / 10) * 10 + 1;
-    startY = Math.floor(y / 10) * 10 + 1;
-
+    startX = Math.floor(x / gridSize) * gridSize;
+    startY = Math.floor(y / gridSize) * gridSize;
+    console.log(startX, startY);
     // Fill the square with the selected color
     context.fillStyle = currentColor;
-    context.fillRect(startX, startY, 3, 3);
+    context.fillRect(startX, startY, gridSize, gridSize);
     //context.fillRect(x, y, 3, 3);
 
     // Update the live render and the css code output
