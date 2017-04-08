@@ -19,6 +19,7 @@ function init() {
         zoom: 4,
         center: new google.maps.LatLng(39.3, -95.8),
         mapTypeId: google.maps.MapTypeId.ROADMAP,
+        clickableIcons: false,
         styles: [
             {
               stylers: [{saturation: -85}]
@@ -92,8 +93,11 @@ function drawPixel(x, y) {
     
     console.log(x, y);
     // Determine which pixel representation we're on.
+    console.log(x/gridSize, y/gridSize);
     startX = Math.floor(x / gridSize) * gridSize;
     startY = Math.floor(y / gridSize) * gridSize;
+    startX = startX.toFixed(4);
+    startY = startY.toFixed(4);
     console.log(startX, startY);
     
     // Fill the square with the selected color
@@ -143,9 +147,14 @@ function update() {
     var worldPoint = mapProjection.fromLatLngToPoint(rectLatLng);
     //context.fillRect(worldPoint.x, worldPoint.y, rectWidth, rectWidth);
     
+    /*context.fillStyle = "#999"
+    for (var i = 0; i < canvasWidth || i < canvasHeight; i += gridSize) {
+        context.fillRect(i, 0, 1, canvasHeight);
+        context.fillRect(0, i, canvasWidth, 1);
+    }*/
     
     for (var i = 0; i < pixels.length; i++) {
-        console.log(pixels[i][0], pixels[i][1]);
+        //console.log(pixels[i][0], pixels[i][1]);
         drawPixel(pixels[i][0], pixels[i][1]);
     }
 }
