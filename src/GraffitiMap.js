@@ -3,6 +3,7 @@ var canvasLayer;
 var colorLayer;
 var context;
 var colorLayerContext;
+var colorLayerWidth;
 
 var rectLatLng = new google.maps.LatLng(40, -95);
 var rectWidth = 6.5;
@@ -89,6 +90,18 @@ function click (e) {
     var y;
     x = e.ca.x; //Get canvas x of click
     y = e.ca.y; //Get canvas y of click
+    
+    relx = e.pixel.x;
+    rely = e.pixel.y;
+    
+    //Trying to detect clicks on the color canvas (something's wrong)
+    if(relx >= 0 && relx <= colorLayerWidth) {
+        if(rely <= canvasLayer.height && rely >= canvasLayer.height - colorLayerWidth) {
+            console.log("asfdsaf");
+        }
+    }
+    
+    //Need to do this if the click is not on the color canvas
     drawPixel(x, y);
     //Probably should do hash to overwrite pixels with same coordinates
     pixels.push([x, y]); //Save pixel in array
@@ -160,10 +173,8 @@ function update() {
         context.fillRect(i, 0, 1, canvasHeight);
         context.fillRect(0, i, canvasWidth, 1);
     }*/
-    
-    var colorWidth = canvasWidth / 8;
-    
-    colorLayerContext.fillRect(0, canvasHeight - colorWidth, colorWidth, colorWidth);
+    colorLayerWidth = canvasWidth / 8
+    colorLayerContext.fillRect(0, canvasHeight - colorLayerWidth, colorLayerWidth, colorLayerWidth);
     
     for (var i = 0; i < pixels.length; i++) {
         //console.log(pixels[i][0], pixels[i][1]);
