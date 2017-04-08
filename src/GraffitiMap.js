@@ -28,6 +28,8 @@ function init() {
     var mapDiv = document.getElementById('map-div');
     map = new google.maps.Map(mapDiv, mapOptions);
 
+    map.addListener('click', click);
+
     // initialize the canvasLayer
     var canvasLayerOptions = {
         map: map,
@@ -38,6 +40,10 @@ function init() {
     };
     canvasLayer = new CanvasLayer(canvasLayerOptions);
     context = canvasLayer.canvas.getContext('2d');
+}
+
+function click () {
+    console.log("click");
 }
 
 function resize() {
