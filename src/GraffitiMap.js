@@ -102,7 +102,7 @@ function drawPixel(x, y) {
     
     // Fill the square with the selected color
     context.fillStyle = currentColor;
-    context.fillRect(startX, startY, gridSize, gridSize);
+    context.fillRect(startX, startY, gridSize * 0.9, gridSize * 0.9);
 }
 
 function resize() {
