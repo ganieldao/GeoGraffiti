@@ -1,6 +1,8 @@
 var map;
 var canvasLayer;
+var canvasLayer2;
 var context;
+var context2;
 
 var rectLatLng = new google.maps.LatLng(40, -95);
 var rectWidth = 6.5;
@@ -62,6 +64,8 @@ function init() {
         resolutionScale: resolutionScale
     };
     canvasLayer = new CanvasLayer(canvasLayerOptions);
+    canvasLayer2 = new CanvasLayer(canvasLayerOptions);
+    context2 = canvasLayer2.canvas.getContext('2d');
     context = canvasLayer.canvas.getContext('2d');
 }
 
@@ -152,6 +156,10 @@ function update() {
         context.fillRect(i, 0, 1, canvasHeight);
         context.fillRect(0, i, canvasWidth, 1);
     }*/
+    
+    var colorWidth = canvasWidth / 8;
+    
+    context2.fillRect(0, canvasHeight - colorWidth, colorWidth, colorWidth);
     
     for (var i = 0; i < pixels.length; i++) {
         //console.log(pixels[i][0], pixels[i][1]);
