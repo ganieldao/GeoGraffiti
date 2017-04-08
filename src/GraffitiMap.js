@@ -5,6 +5,8 @@ var context;
 var rectLatLng = new google.maps.LatLng(40, -95);
 var rectWidth = 6.5;
 
+var currentColor = '#000'; // default black
+
 var resolutionScale = window.devicePixelRatio || 1;
 
 function init() {
@@ -42,8 +44,33 @@ function init() {
     context = canvasLayer.canvas.getContext('2d');
 }
 
-function click () {
+function click (e) {
     console.log("click");
+    console.log(e);
+    var x;
+    var y;
+    var startX;
+    var startY;
+
+    // Get the relative position (offset)
+    x = e.ca.x; // column or x-axis
+    y = e.ca.y; // row or y-axis
+    console.log(x, y);
+    // Determine which pixel representation we're on. For example,
+    // if the (x, y) coordinates are (8, 8), then we want to color
+    // in the square starting from (1, 1) through (9, 9) while leaving
+    // the border the existing grid colors of grey and red.
+    startX = Math.floor(x / 10) * 10 + 1;
+    startY = Math.floor(y / 10) * 10 + 1;
+
+    // Fill the square with the selected color
+    context.fillStyle = currentColor;
+    context.fillRect(startX, startY, 3, 3);
+    //context.fillRect(x, y, 3, 3);
+
+    // Update the live render and the css code output
+    //x = getScaledCoordinate(startX);
+    //y = getScaledCoordinate(startY);
 }
 
 function resize() {
