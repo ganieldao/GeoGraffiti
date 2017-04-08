@@ -9,7 +9,9 @@ var currentColor = '#000'; // default black
 
 var resolutionScale = window.devicePixelRatio || 1;
 
-var gridSize = 0.2;
+var gridSize = 0.1;
+
+var pixels = [];
 
 function init() {
     // initialize the map
@@ -51,12 +53,17 @@ function click (e) {
     console.log(e);
     var x;
     var y;
-    var startX;
-    var startY;
-
     // Get the relative position (offset)
     x = e.ca.x; // column or x-axis
     y = e.ca.y; // row or y-axis
+    drawPixel(x, y);
+    pixels.push([x, y]);
+}
+
+function drawPixel(x, y) {
+    console.log(pixels);
+    var startX;
+    var startY;
     console.log(x, y);
     // Determine which pixel representation we're on. For example,
     // if the (x, y) coordinates are (8, 8), then we want to color
@@ -115,7 +122,12 @@ function update() {
 
     // project rectLatLng to world coordinates and draw
     var worldPoint = mapProjection.fromLatLngToPoint(rectLatLng);
-    context.fillRect(worldPoint.x, worldPoint.y, rectWidth, rectWidth);
+    //context.fillRect(worldPoint.x, worldPoint.y, rectWidth, rectWidth);
+    
+    for (var i = 0; i < pixels.length; i++) {
+        console.log(pixels[i][0], pixels[i][1]);
+        drawPixel(pixels[i][0], pixels[i][1]);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', init, false);
