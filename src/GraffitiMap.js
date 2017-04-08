@@ -9,7 +9,7 @@ var currentColor = '#000'; // default black
 
 var resolutionScale = window.devicePixelRatio || 1;
 
-var gridSize = 0.1;
+var gridSize = 0.0001;
 
 var pixels = [];
 
@@ -33,7 +33,23 @@ function init() {
         };
     var mapDiv = document.getElementById('map-div');
     map = new google.maps.Map(mapDiv, mapOptions);
-
+    
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+            map.setCenter(pos);
+            map.setZoom(19);
+        }, function() {
+            handleLocationError(true, infoWindow, map.getCenter());
+        });
+    } else {
+        // Browser doesn't support Geolocation
+        handleLocationError(false, infoWindow, map.getCenter());
+    }
+    
     map.addListener('click', click);
 
     // initialize the canvasLayer
@@ -48,38 +64,41 @@ function init() {
     context = canvasLayer.canvas.getContext('2d');
 }
 
+function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+    infoWindow.setPosition(pos);
+    infoWindow.setContent(browserHasGeolocation ?
+                              'Error: The Geolocation service failed.' :
+                              'Error: Your browser doesn\'t support geolocation.');
+    infoWindow.open(map);
+}
+
+
 function click (e) {
     console.log("click");
     console.log(e);
     var x;
     var y;
-    // Get the relative position (offset)
-    x = e.ca.x; // column or x-axis
-    y = e.ca.y; // row or y-axis
+    x = e.ca.x; //Get canvas x of click
+    y = e.ca.y; //Get canvas y of click
     drawPixel(x, y);
-    pixels.push([x, y]);
+    //Probably should do hash to overwrite pixels with same coordinates
+    pixels.push([x, y]); //Save pixel in array
 }
 
+//For drawing the pixel on the canvas
 function drawPixel(x, y) {
-    console.log(pixels);
     var startX;
     var startY;
+    
     console.log(x, y);
-    // Determine which pixel representation we're on. For example,
-    // if the (x, y) coordinates are (8, 8), then we want to color
-    // in the square starting from (1, 1) through (9, 9) while leaving
-    // the border the existing grid colors of grey and red.
+    // Determine which pixel representation we're on.
     startX = Math.floor(x / gridSize) * gridSize;
     startY = Math.floor(y / gridSize) * gridSize;
     console.log(startX, startY);
+    
     // Fill the square with the selected color
     context.fillStyle = currentColor;
     context.fillRect(startX, startY, gridSize, gridSize);
-    //context.fillRect(x, y, 3, 3);
-
-    // Update the live render and the css code output
-    //x = getScaledCoordinate(startX);
-    //y = getScaledCoordinate(startY);
 }
 
 function resize() {
@@ -123,6 +142,7 @@ function update() {
     // project rectLatLng to world coordinates and draw
     var worldPoint = mapProjection.fromLatLngToPoint(rectLatLng);
     //context.fillRect(worldPoint.x, worldPoint.y, rectWidth, rectWidth);
+    
     
     for (var i = 0; i < pixels.length; i++) {
         console.log(pixels[i][0], pixels[i][1]);
