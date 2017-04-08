@@ -22,6 +22,10 @@ function init() {
         center: new google.maps.LatLng(39.3, -95.8),
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         clickableIcons: false,
+        disableDefaultUI: true, // a way to quickly hide all controls
+    	//mapTypeControl: true,
+    	scaleControl: true,
+    	zoomControl: true,
         styles: [
             {
               stylers: [{saturation: -85}]
@@ -100,8 +104,8 @@ function drawPixel(x, y) {
     console.log(x/gridSize, y/gridSize);
     startX = Math.floor(x / gridSize) * gridSize;
     startY = Math.floor(y / gridSize) * gridSize;
-    startX = startX.toFixed(4);
-    startY = startY.toFixed(4);
+    //startX = startX.toFixed(4);
+    //startY = startY.toFixed(4);
     console.log(startX, startY);
     
     // Fill the square with the selected color
