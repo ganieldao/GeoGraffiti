@@ -147,7 +147,9 @@ function checkLocation(x, y, callback) {  //Checks the current location of the u
         myLatLng = new google.maps.LatLng(lat,long);                //Converts the lat/long to Google's data type 
         currentIndex = mapProjection.fromLatLngToPoint(myLatLng);   //Converts to point 
 
-        if(Math.abs(currentIndex.x - x) < radius && Math.abs(currentIndex.y - y) < radius){ 
+        currentRadius = Math.sqrt(Math.pow(Math.abs(currentIndex.x - x),2) + Math.pow(Math.abs(currentIndex.y - y),2));
+
+        if( currentRadius < radius){
             callback();
         }
         else
