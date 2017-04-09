@@ -1,6 +1,6 @@
 # GeoGraffiti
 
-##r/Place, but IRL
+## r/Place, but IRL
 To try it out, make sure you have node and install the dependencies
 ```
 npm install
