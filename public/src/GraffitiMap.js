@@ -34,9 +34,9 @@ function init() {
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         clickableIcons: false,
         disableDefaultUI: true, // a way to quickly hide all controls
-    	//mapTypeControl: true,
-    	scaleControl: true,
-    	zoomControl: true,
+        //mapTypeControl: true,
+        scaleControl: true,
+        zoomControl: true,
         styles: [
             {
               stylers: [{saturation: -85}]
@@ -101,11 +101,38 @@ function click (e) {
     x = e.ca.x; //Get canvas x of click
     y = e.ca.y; //Get canvas y of click
     
-    checkLocation(x,y);
+    relx = e.pixel.x;
+    rely = e.pixel.y;
+    
+    //Detect clicks on the color canvas
+    console.log(relx, rely, colorLayerWidth, canvasLayer.canvas.height - colorLayerWidth);
+    if(relx >= 0 && relx <= colorLayerWidth) {
+        if(rely <= canvasLayer.canvas.height && rely >= canvasLayer.canvas.height - colorLayerWidth) {
+            //Handle clicks on color canvas
+            if(currentColor == '#000') { // black
+                currentColor = '#00F'
+            } else if(currentColor == '#00F') { // blue
+                currentColor = '#F00'
+            } else if(currentColor == '#F00') { // red
+                currentColor = '#FFF'
+            } else if(currentColor == '#FFF') { // white
+                currentColor = '#000'
+            }
+            update();
+            return;
+        }
+    }
 
+    checkLocation(x,y, function() {
+        //Need to do this if the click is not on the color canvas
+        drawPixel(x, y, currentColor);
+        socket.emit('newPixel');
+        //Probably should do hash to overwrite pixels with same coordinates
+        pixels.push([x, y, currentColor]); //Save pixel in array
+    });
 }
 
-function checkLocation(x, y) {  //Checks the current location of the user
+function checkLocation(x, y, callback) {  //Checks the current location of the user
     var myLatLng;           
     var currentIndex;           //Stores the longitude and latitude in point form
     var lat;                    //Current Latitude of user
@@ -117,48 +144,16 @@ function checkLocation(x, y) {  //Checks the current location of the user
         lat = location.coords.latitude;
         long = location.coords.longitude;                           //gets the current long/lat
 
-
         myLatLng = new google.maps.LatLng(lat,long);                //Converts the lat/long to Google's data type 
         currentIndex = mapProjection.fromLatLngToPoint(myLatLng);   //Converts to point 
 
-
         if(Math.abs(currentIndex.x - x) < radius && Math.abs(currentIndex.y - y) < radius){ 
-            drawPixel(x, y);        //Probably should do hash to overwrite pixels with same coordinates
-            pixels.push([x, y]);    //Save pixel in arraycheck = 1;
+            callback();
         }
         else
         {
             console.log("User is not in the area");
         }
-
-        
-        relx = e.pixel.x;
-        rely = e.pixel.y;
-        
-        //Detect clicks on the color canvas
-        console.log(relx, rely, colorLayerWidth, canvasLayer.canvas.height - colorLayerWidth);
-        if(relx >= 0 && relx <= colorLayerWidth) {
-            if(rely <= canvasLayer.canvas.height && rely >= canvasLayer.canvas.height - colorLayerWidth) {
-                //Handle clicks on color canvas
-                if(currentColor == '#000') { // black
-                    currentColor = '#00F'
-                } else if(currentColor == '#00F') { // blue
-                    currentColor = '#F00'
-                } else if(currentColor == '#F00') { // red
-                    currentColor = '#FFF'
-                } else if(currentColor == '#FFF') { // white
-                    currentColor = '#000'
-                }
-                update();
-                return;
-            }
-        }
-        
-        //Need to do this if the click is not on the color canvas
-        drawPixel(x, y, currentColor);
-        socket.emit('newPixel');
-        //Probably should do hash to overwrite pixels with same coordinates
-        pixels.push([x, y, currentColor]); //Save pixel in array
     });  
 }
 
