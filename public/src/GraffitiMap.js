@@ -7,7 +7,7 @@ var colorLayerWidth;
 
 var rectLatLng = new google.maps.LatLng(40, -95);
 var rectWidth = 6.5;
-
+var radius = .001
 var currentColor = '#000'; // default black
 
 var resolutionScale = window.devicePixelRatio || 1;
