@@ -94,10 +94,13 @@ function click (e) {
     relx = e.pixel.x;
     rely = e.pixel.y;
     
-    //Trying to detect clicks on the color canvas (something's wrong)
+    //Detect clicks on the color canvas
+    console.log(relx, rely, colorLayerWidth, canvasLayer.canvas.height - colorLayerWidth);
     if(relx >= 0 && relx <= colorLayerWidth) {
-        if(rely <= canvasLayer.height && rely >= canvasLayer.height - colorLayerWidth) {
-            console.log("asfdsaf");
+        if(rely <= canvasLayer.canvas.height && rely >= canvasLayer.canvas.height - colorLayerWidth) {
+            //Handle clicks on color canvas
+            
+            return;
         }
     }
     
@@ -174,6 +177,7 @@ function update() {
         context.fillRect(0, i, canvasWidth, 1);
     }*/
     colorLayerWidth = canvasWidth / 8
+    console.log(canvasHeight, colorLayerWidth)
     colorLayerContext.fillRect(0, canvasHeight - colorLayerWidth, colorLayerWidth, colorLayerWidth);
     
     for (var i = 0; i < pixels.length; i++) {
