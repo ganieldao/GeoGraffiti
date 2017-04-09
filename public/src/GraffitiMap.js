@@ -16,6 +16,16 @@ var gridSize = 0.0001;
 
 var pixels = [];
 
+var chunks = [];
+
+//Generate 10x10 chunks grid
+for(var i = 0; i < 10; i ++) {
+    chunks.push([]);
+    for(var j = 0; j < 10; j ++) {
+        chunks[i].push([]);
+    }
+}
+
 socket.on('connect', function(data) {
     socket.emit('join', 'Hello World from client');
 });
