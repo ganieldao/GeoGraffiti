@@ -69,8 +69,10 @@ document.addEventListener('keydown', function(e) {
     konamiCodePosition++;
 
     // if the last key is reached, activate cheats
-    if (konamiCodePosition == konamiCode.length)
-      activateCheats();
+    if (konamiCodePosition == konamiCode.length) {
+        activateCheats();
+        konamiCodePosition = 0;
+    }
   } else
     konamiCodePosition = 0;
 });
@@ -195,9 +197,9 @@ function click (e) {
     rely = e.pixel.y;
     
     //Detect clicks on the color canvas
-    console.log(relx, rely, colorLayerWidth, canvasLayer.canvas.height - colorLayerWidth);
+    console.log(relx, rely, colorLayerWidth, canvasLayer.canvas.height - colorLayerWidth, canvasLayer.canvas.scrollHeight - colorLayerWidth);
     if(relx >= 0 && relx <= colorLayerWidth) {
-        if(rely <= canvasLayer.canvas.height && rely >= canvasLayer.canvas.height - colorLayerWidth) {
+        if(rely <= canvasLayer.canvas.scrollHeight && rely >= canvasLayer.canvas.scrollHeight - colorLayerWidth) {
             //Handle clicks on color canvas
             if(currentColor == '#000') { // black
                 currentColor = '#00F'
