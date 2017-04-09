@@ -1,0 +1,10 @@
+{
+  "name": "Geograffiti",
+  "version": "0.0.1",
+  "description": "PlaceIRL",
+  "dependencies": {
+    "express": "^4.15.2",
+    "morgan": "^1.8.1",
+    "socket.io": "^1.7.3"
+  }
+}
