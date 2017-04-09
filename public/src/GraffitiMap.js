@@ -176,10 +176,12 @@ function click (e) {
     
     checkLocation(x,y, function() {
         //Need to do this if the click is not on the color canvas
+        console.log("good location");
         drawPixel(x, y, currentColor);
+        console.log(socket);
         socket.emit('newPixel', [x, y, currentColor]);
         //Probably should do hash to overwrite pixels with same coordinates
-        console.log(pixels);
+        //console.log(pixels);
         pixels.push([x, y, currentColor]); //Save pixel in array
     });
 }
@@ -214,14 +216,14 @@ function drawPixel(x, y, color) {
     var startX;
     var startY;
     
-    console.log(x, y);
+    //console.log(x, y);
     // Determine which pixel representation we're on.
-    console.log(x/gridSize, y/gridSize);
+    //console.log(x/gridSize, y/gridSize);
     startX = Math.floor(x / gridSize) * gridSize;
     startY = Math.floor(y / gridSize) * gridSize;
     //startX = startX.toFixed(4);
     //startY = startY.toFixed(4);
-    console.log(startX, startY);
+    //console.log(startX, startY);
     
     // Fill the square with the selected color
     context.fillStyle = color;
@@ -245,7 +247,6 @@ function update() {
      * see https://developers.google.com/maps/documentation/javascript/maptypes#MapCoordinates
      */
     var mapProjection = map.getProjection();
-
     /**
      * Clear transformation from last update by setting to identity matrix.
      * Could use context.resetTransform(), but most browsers don't support
@@ -276,12 +277,12 @@ function update() {
         context.fillRect(0, i, canvasWidth, 1);
     }*/
     colorLayerWidth = canvasWidth / 8
-    console.log(canvasHeight, colorLayerWidth)
+    //console.log(canvasHeight, colorLayerWidth)
     colorLayerContext.fillStyle = currentColor;
     colorLayerContext.fillRect(0, canvasHeight - colorLayerWidth, colorLayerWidth, colorLayerWidth);
     
     for (var i = 0; i < pixels.length; i++) {
-        console.log(pixels[i][0], pixels[i][1]);
+        //console.log(pixels[i][0], pixels[i][1]);
         drawPixel(pixels[i][0], pixels[i][1], pixels[i][2]);
     }
 }

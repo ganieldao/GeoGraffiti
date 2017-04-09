@@ -5,6 +5,8 @@ var io = require('socket.io')(server);
 
 var pixelData = [];
 
+app.use(express.static('public'));
+
 var http = require('http')
 var options = {
     "host": "dangaolicksballz-dev.us-west-2.elasticbeanstalk.com",
@@ -14,38 +16,45 @@ var options = {
          "Content-Type" : "application/json"
     }
 }
-        
+
+var str = "";
+    
 var req = http.request(options, function(res) {
     res.setEncoding('utf8');
-    res.on('data', completion);
+    res.on('data', function (chunk) {
+        str += chunk;
+    });
+    res.on('end', completion);
+    res.on('error', function(err){
+      console.log("Error Occurred: "+err.message);
+    });
 });
 
 function completion(data) {
-    var objs = JSON.parse(data);
+    //console.log(str);
+    var objs = JSON.parse(str);
     for(var i = 0; i < objs.length; i++) {
         var obj = objs[i];
         pixelData.push([obj["x"], obj["y"], obj["rgb"]]);
     }
-    console.log(pixelData);
+    
+    //console.log(pixelData);
     io.sockets.emit('broad', pixelData);
 } 
 
 req.end();
-
-app.use(express.static('public'));
 
 io.on('connection', function(client) {  
     console.log('Client connected...');
 
     client.on('join', function(data) {
         console.log(data);
-        io.sockets.emit('broad', pixelData);
+        client.emit('broad', pixelData);
     });
 
     client.on('newPixel', function(data) {
         console.log("new pixel!");
         pixelData.push(data);
-        
         var http = require('http')
         var options = {
           "host": "dangaolicksballz-dev.us-west-2.elasticbeanstalk.com",
@@ -71,7 +80,7 @@ io.on('connection', function(client) {
         console.log(JSON.stringify(jsonData));
         req.write(JSON.stringify(jsonData));
         req.end();
-
+        console.log(pixelData);
         io.sockets.emit('broad', pixelData);
     });
 });
