@@ -122,7 +122,6 @@ function init() {
 
             var marker = new google.maps.Marker({   //places marker at current location
                 animation: google.maps.Animation.DROP,
-                //icon: 'C:\Users\sagar\Desktop\GeoGraffiti\public\src\personMarker.png',
                 position: pos,
             }
 
