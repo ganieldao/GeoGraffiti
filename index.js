@@ -12,6 +12,10 @@ io.on('connection', function(client) {
         console.log(data);
     });
 
+    client.on('newPixel', function() {
+        console.log("new pixel!");
+        io.sockets.emit('broad');
+    });
 });
 
 server.listen(4200);  
