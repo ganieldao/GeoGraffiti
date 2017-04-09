@@ -105,23 +105,19 @@ function click (e) {
     rely = e.pixel.y;
     
     //Detect clicks on the color canvas
-    if(relx <= colorLayerWidth) {
-        console.log("inside the x of color colorLayer")
-        if(rely >= canvasLayer.canvas.height - colorLayerWidth) {
-            console.log("inside the y of color colorLayer")
-            //Handle clicks on color canvas
-            if(currentColor == '#000') { // black
-                currentColor = '#00F'
-            } else if(currentColor == '#00F') { // blue
-                currentColor = '#F00'
-            } else if(currentColor == '#F00') { // red
-                currentColor = '#FFF'
-            } else if(currentColor == '#FFF') { // white
-                currentColor = '#000'
-            }
-            update();
-            return;
+    if(relx <= colorLayerWidth && rely <= colorLayerWidth) {
+        //Handle clicks on color canvas
+        if(currentColor == '#000') { // black
+            currentColor = '#00F'
+        } else if(currentColor == '#00F') { // blue
+            currentColor = '#F00'
+        } else if(currentColor == '#F00') { // red
+            currentColor = '#FFF'
+        } else if(currentColor == '#FFF') { // white
+            currentColor = '#000'
         }
+        update();
+        return;
     }
 
     checkLocation(x,y, function() {
@@ -229,7 +225,7 @@ function update() {
     colorLayerWidth = canvasWidth / 8
     console.log(canvasHeight, colorLayerWidth)
     colorLayerContext.fillStyle = currentColor;
-    colorLayerContext.fillRect(0, canvasHeight - colorLayerWidth, colorLayerWidth, colorLayerWidth);
+    colorLayerContext.fillRect(0, 0, colorLayerWidth, colorLayerWidth);
 
     for (var i = 0; i < pixels.length; i++) {
         //console.log(pixels[i][0], pixels[i][1]);
