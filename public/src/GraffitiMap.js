@@ -106,8 +106,10 @@ function click (e) {
     
     //Detect clicks on the color canvas
     console.log(relx, rely, colorLayerWidth, canvasLayer.canvas.height - colorLayerWidth);
-    if(relx >= 0 && relx <= colorLayerWidth) {
-        if(rely <= canvasLayer.canvas.height && rely >= canvasLayer.canvas.height - colorLayerWidth) {
+    if(relx <= colorLayerWidth) {
+        console.log("inside the x of color colorLayer")
+        if(rely >= canvasLayer.canvas.height - colorLayerWidth) {
+            console.log("inside the y of color colorLayer")
             //Handle clicks on color canvas
             if(currentColor == '#000') { // black
                 currentColor = '#00F'
@@ -149,7 +151,7 @@ function checkLocation(x, y, callback) {  //Checks the current location of the u
 
         currentRadius = Math.sqrt(Math.pow(Math.abs(currentIndex.x - x),2) + Math.pow(Math.abs(currentIndex.y - y),2));
 
-        if( currentRadius < radius){
+        if(currentRadius < radius){
             callback();
         }
         else
