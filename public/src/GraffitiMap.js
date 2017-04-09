@@ -105,7 +105,6 @@ function click (e) {
     rely = e.pixel.y;
     
     //Detect clicks on the color canvas
-    console.log(relx, rely, colorLayerWidth, canvasLayer.canvas.height - colorLayerWidth);
     if(relx <= colorLayerWidth) {
         console.log("inside the x of color colorLayer")
         if(rely >= canvasLayer.canvas.height - colorLayerWidth) {
@@ -186,8 +185,8 @@ function resize() {
 
 function update() {
     // clear previous canvas contents
-    var canvasWidth = canvasLayer.canvas.width;
     var canvasHeight = canvasLayer.canvas.height;
+    var canvasWidth = canvasLayer.canvas.width;
     context.clearRect(0, 0, canvasWidth, canvasHeight);
 
     // we like our rectangles hideous
@@ -231,7 +230,7 @@ function update() {
     console.log(canvasHeight, colorLayerWidth)
     colorLayerContext.fillStyle = currentColor;
     colorLayerContext.fillRect(0, canvasHeight - colorLayerWidth, colorLayerWidth, colorLayerWidth);
-    
+
     for (var i = 0; i < pixels.length; i++) {
         //console.log(pixels[i][0], pixels[i][1]);
         drawPixel(pixels[i][0], pixels[i][1], pixels[i][2]);
