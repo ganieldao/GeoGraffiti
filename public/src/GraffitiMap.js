@@ -53,14 +53,38 @@ function init() {
     var mapDiv = document.getElementById('map-div');
     map = new google.maps.Map(mapDiv, mapOptions);
     
-    if (navigator.geolocation) {
+
+    if (navigator.geolocation) {    //Gets geoloaction
         navigator.geolocation.getCurrentPosition(function(position) {
             var pos = {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
             };
+
             map.setCenter(pos);
             map.setZoom(19);
+
+            var marker = new google.maps.Marker({   //places marker at current location
+                animation: google.maps.Animation.DROP,
+                //icon: 'C:\Users\sagar\Desktop\GeoGraffiti\public\src\personMarker.png',
+                position: pos,
+            }
+
+            );
+
+            var circle = new google.maps.Circle({   //places circle in area one can edit
+                clickable: false,
+                //strokeColor: '#FF0000',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                //fillColor: '#FF0000',
+                fillOpacity: 0.35,
+                map: map,
+                center: pos,
+                radius: 120
+            });
+
+        marker.setMap(map);
         }, function() {
             handleLocationError(true, infoWindow, map.getCenter());
         });
