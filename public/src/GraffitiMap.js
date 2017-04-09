@@ -16,7 +16,6 @@ var gridSize = 0.0001;
 
 var pixels = [];
 
-var socket = io.connect('http://localhost:4200');
 socket.on('connect', function(data) {
     socket.emit('join', 'Hello World from client');
 });
@@ -24,6 +23,8 @@ socket.on('connect', function(data) {
 socket.on('broad', function(data) {
     console.log("new update");
     //Refresh map
+    pixels = data;
+    update();
 });
 
 function init() {
@@ -125,7 +126,7 @@ function click (e) {
     
     //Need to do this if the click is not on the color canvas
     drawPixel(x, y, currentColor);
-    socket.emit('newPixel');
+    socket.emit('newPixel', [x, y, currentColor]);
     //Probably should do hash to overwrite pixels with same coordinates
     pixels.push([x, y, currentColor]); //Save pixel in array
 }
