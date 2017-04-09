@@ -104,19 +104,28 @@ function click (e) {
     if(relx >= 0 && relx <= colorLayerWidth) {
         if(rely <= canvasLayer.canvas.height && rely >= canvasLayer.canvas.height - colorLayerWidth) {
             //Handle clicks on color canvas
-            
+            if(currentColor == '#000') { // black
+                currentColor = '#00F'
+            } else if(currentColor == '#00F') { // blue
+                currentColor = '#F00'
+            } else if(currentColor == '#F00') { // red
+                currentColor = '#FFF'
+            } else if(currentColor == '#FFF') { // white
+                currentColor = '#000'
+            }
+            update();
             return;
         }
     }
     
     //Need to do this if the click is not on the color canvas
-    drawPixel(x, y);
+    drawPixel(x, y, currentColor);
     //Probably should do hash to overwrite pixels with same coordinates
-    pixels.push([x, y]); //Save pixel in array
+    pixels.push([x, y, currentColor]); //Save pixel in array
 }
 
 //For drawing the pixel on the canvas
-function drawPixel(x, y) {
+function drawPixel(x, y, color) {
     var startX;
     var startY;
     
@@ -130,7 +139,7 @@ function drawPixel(x, y) {
     console.log(startX, startY);
     
     // Fill the square with the selected color
-    context.fillStyle = currentColor;
+    context.fillStyle = color;
     context.fillRect(startX, startY, gridSize * 0.9, gridSize * 0.9);
 }
 
@@ -183,11 +192,12 @@ function update() {
     }*/
     colorLayerWidth = canvasWidth / 8
     console.log(canvasHeight, colorLayerWidth)
+    colorLayerContext.fillStyle = currentColor;
     colorLayerContext.fillRect(0, canvasHeight - colorLayerWidth, colorLayerWidth, colorLayerWidth);
     
     for (var i = 0; i < pixels.length; i++) {
         //console.log(pixels[i][0], pixels[i][1]);
-        drawPixel(pixels[i][0], pixels[i][1]);
+        drawPixel(pixels[i][0], pixels[i][1], pixels[i][2]);
     }
 }
 
