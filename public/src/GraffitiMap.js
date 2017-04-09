@@ -21,6 +21,11 @@ socket.on('connect', function(data) {
     socket.emit('join', 'Hello World from client');
 });
 
+socket.on('broad', function(data) {
+    console.log("new update");
+    //Refresh map
+});
+
 function init() {
     // initialize the map
     var mapOptions = {
@@ -120,6 +125,7 @@ function click (e) {
     
     //Need to do this if the click is not on the color canvas
     drawPixel(x, y, currentColor);
+    socket.emit('newPixel');
     //Probably should do hash to overwrite pixels with same coordinates
     pixels.push([x, y, currentColor]); //Save pixel in array
 }
