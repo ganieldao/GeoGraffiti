@@ -4,6 +4,7 @@ var colorLayer;
 var context;
 var colorLayerContext;
 var colorLayerWidth;
+var currentPosition;
 
 var rectLatLng = new google.maps.LatLng(40, -95);
 var rectWidth = 6.5;
@@ -32,6 +33,7 @@ socket.on('connect', function(data) {
 
 socket.on('broad', function(data) {
     console.log("new update");
+    console.log(data);
     //Refresh map
     pixels = data;
     update();
@@ -63,9 +65,11 @@ function init() {
     var mapDiv = document.getElementById('map-div');
     map = new google.maps.Map(mapDiv, mapOptions);
     
-
+    getLocation();
+    
     if (navigator.geolocation) {    //Gets geoloaction
         navigator.geolocation.getCurrentPosition(function(position) {
+            currentPosition = position;
             var pos = {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
@@ -127,6 +131,17 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     infoWindow.open(map);
 }
 
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(showPosition);
+    } else {
+        x.innerHTML = "Geolocation is not supported by this browser.";
+    }
+}
+
+function showPosition(position) {
+    currentPosition = position;
+}
 
 function click (e) {
     console.log("click");
@@ -158,11 +173,40 @@ function click (e) {
         }
     }
     
-    //Need to do this if the click is not on the color canvas
-    drawPixel(x, y, currentColor);
-    socket.emit('newPixel', [x, y, currentColor]);
-    //Probably should do hash to overwrite pixels with same coordinates
-    pixels.push([x, y, currentColor]); //Save pixel in array
+    
+    checkLocation(x,y, function() {
+        //Need to do this if the click is not on the color canvas
+        drawPixel(x, y, currentColor);
+        socket.emit('newPixel', [x, y, currentColor]);
+        //Probably should do hash to overwrite pixels with same coordinates
+        console.log(pixels);
+        pixels.push([x, y, currentColor]); //Save pixel in array
+    });
+}
+
+function checkLocation(x, y, callback) {  //Checks the current location of the user
+    var myLatLng;           
+    var currentIndex;           //Stores the longitude and latitude in point form
+    var lat;                    //Current Latitude of user
+    var longi;                   //Current Longitude of user
+
+    var mapProjection = map.getProjection();    
+
+    lat = currentPosition.coords.latitude;
+    longi = currentPosition.coords.longitude;                           //gets the current long/lat
+
+    myLatLng = new google.maps.LatLng(lat,longi);                //Converts the lat/long to Google's data type 
+    currentIndex = mapProjection.fromLatLngToPoint(myLatLng);   //Converts to point 
+
+    currentRadius = Math.sqrt(Math.pow(Math.abs(currentIndex.x - x),2) + Math.pow(Math.abs(currentIndex.y - y),2));
+
+    if(currentRadius < radius){
+        callback();
+    }
+    else
+    {
+        console.log("User is not in the area");
+    } 
 }
 
 //For drawing the pixel on the canvas
@@ -237,7 +281,7 @@ function update() {
     colorLayerContext.fillRect(0, canvasHeight - colorLayerWidth, colorLayerWidth, colorLayerWidth);
     
     for (var i = 0; i < pixels.length; i++) {
-        //console.log(pixels[i][0], pixels[i][1]);
+        console.log(pixels[i][0], pixels[i][1]);
         drawPixel(pixels[i][0], pixels[i][1], pixels[i][2]);
     }
 }
